@@ -16,8 +16,9 @@
 
   <distributionManagement>
     <repository>
-      <id>hashdata-public</id>
-      <url>http://artifactory.hashdata.xyz/artifactory/maven-public</url>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/wangzw/grpc-rest-proxy</url>
     </repository>
   </distributionManagement>
 

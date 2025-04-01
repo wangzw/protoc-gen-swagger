@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>wang.zhanwei</groupId>
+  <artifactId>protoc-gen-openapiv2</artifactId>
+  <packaging>jar</packaging>
+  <version>v2.26.0</version>
+
+  <properties>
+    <protoc.version>3.25.3</protoc.version>
+    <protobuf.plugin.version>0.6.1</protobuf.plugin.version>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>hashdata-public</id>
+      <url>http://artifactory.hashdata.xyz/artifactory/maven-public</url>
+    </repository>
+  </distributionManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>${protoc.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.6.2</version>
+      </extension>
+    </extensions>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>make</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target name="make">
+                <exec executable="${project.basedir}/src/build.sh" failonerror="true"
+                  dir="${project.basedir}/src">
+                  <arg value="${project.version}"/>
+                  <arg value="${os.detected.name}"/>
+                  <arg value="${os.detected.arch}"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <artifactId>protobuf-maven-plugin</artifactId>
+        <version>${protobuf.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>generate-grpc</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <protocArtifact>
+                com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}
+              </protocArtifact>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>
+                    ${basedir}/target/osx/aarch_64/protoc-gen-openapiv2
+                  </file>
+                  <classifier>osx-aarch_64</classifier>
+                  <type>exe</type>
+                </artifact>
+                <artifact>
+                  <file>
+                    ${basedir}/target/osx/x86_64/protoc-gen-openapiv2
+                  </file>
+                  <classifier>osx-x86_64</classifier>
+                  <type>exe</type>
+                </artifact>
+                <artifact>
+                  <file>
+                    ${basedir}/target/linux/aarch_64/protoc-gen-openapiv2
+                  </file>
+                  <classifier>linux-aarch_64</classifier>
+                  <type>exe</type>
+                </artifact>
+                <artifact>
+                  <file>
+                    ${basedir}/target/linux/x86_64/protoc-gen-openapiv2
+                  </file>
+                  <classifier>linux-x86_64</classifier>
+                  <type>exe</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
